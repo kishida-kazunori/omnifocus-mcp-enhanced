@@ -1,4 +1,5 @@
 import { executeOmniFocusScript } from '../../utils/scriptExecution.js';
+import { formatTaskLink } from '../../utils/taskLinkFormatter.js';
 
 export interface GetTasksByTagOptions {
   tagName: string;
@@ -79,7 +80,7 @@ export async function getTasksByTag(options: GetTasksByTagOptions): Promise<stri
               const statusStr = task.taskStatus !== 'Available' ? ` (${task.taskStatus})` : '';
               const estimateStr = task.estimatedMinutes ? ` ⏱${task.estimatedMinutes}m` : '';
               
-              output += `• ${flagSymbol}${task.name}${dueDateStr}${deferDateStr}${statusStr}${estimateStr}\n`;
+              output += `• ${flagSymbol}${task.name}${dueDateStr}${deferDateStr}${statusStr}${estimateStr} ${formatTaskLink(task.id)}\n`;
               
               if (task.note && task.note.trim()) {
                 output += `  📝 ${task.note.trim()}\n`;

@@ -1,4 +1,5 @@
 import { executeOmniFocusScript } from '../../utils/scriptExecution.js';
+import { formatTaskLink } from '../../utils/taskLinkFormatter.js';
 
 export interface GetFlaggedTasksOptions {
   hideCompleted?: boolean;
@@ -66,7 +67,7 @@ export async function getFlaggedTasks(options: GetFlaggedTasksOptions = {}): Pro
               const statusStr = task.taskStatus !== 'Available' ? ` (${task.taskStatus})` : '';
               const estimateStr = task.estimatedMinutes ? ` ⏱${task.estimatedMinutes}m` : '';
               
-              output += `• 🚩 ${task.name}${dueDateStr}${deferDateStr}${statusStr}${estimateStr}\n`;
+              output += `• 🚩 ${task.name}${dueDateStr}${deferDateStr}${statusStr}${estimateStr} ${formatTaskLink(task.id)}\n`;
               
               if (task.note && task.note.trim()) {
                 output += `  📝 ${task.note.trim()}\n`;
