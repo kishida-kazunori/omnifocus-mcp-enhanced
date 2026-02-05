@@ -1,4 +1,5 @@
 import { executeOmniFocusScript } from '../../utils/scriptExecution.js';
+import { formatTaskLink } from '../../utils/taskLinkFormatter.js';
 
 export interface GetInboxTasksOptions {
   hideCompleted?: boolean;
@@ -39,7 +40,7 @@ export async function getInboxTasks(options: GetInboxTasksOptions = {}): Promise
             const dueDateStr = task.dueDate ? ` [DUE: ${new Date(task.dueDate).toLocaleDateString()}]` : '';
             const statusStr = task.taskStatus !== 'Available' ? ` (${task.taskStatus})` : '';
             
-            output += `${index + 1}. ${flagSymbol}${task.name}${dueDateStr}${statusStr}\n`;
+            output += `${index + 1}. ${flagSymbol}${task.name}${dueDateStr}${statusStr} ${formatTaskLink(task.id)}\n`;
             
             if (task.note && task.note.trim()) {
               output += `   📝 ${task.note.trim()}\n`;

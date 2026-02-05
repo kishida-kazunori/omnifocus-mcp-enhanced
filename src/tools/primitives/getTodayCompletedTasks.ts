@@ -1,4 +1,5 @@
 import { executeOmniFocusScript } from '../../utils/scriptExecution.js';
+import { formatTaskLink } from '../../utils/taskLinkFormatter.js';
 
 export interface GetTodayCompletedTasksOptions {
   limit?: number;
@@ -126,9 +127,9 @@ function formatCompletedTask(task: any): string {
   if (additionalInfo.length > 0) {
     output += ` (${additionalInfo.join(', ')})`;
   }
-  
-  output += '\\n';
-  
+
+  output += ` ${formatTaskLink(task.id)}\\n`;
+
   // 任务备注
   if (task.note && task.note.trim()) {
     output += `  📝 ${task.note.trim()}\\n`;

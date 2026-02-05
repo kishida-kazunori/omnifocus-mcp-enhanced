@@ -1,4 +1,5 @@
 import { executeOmniFocusScript } from '../../utils/scriptExecution.js';
+import { formatTaskLink } from '../../utils/taskLinkFormatter.js';
 
 export interface GetCustomPerspectiveTasksOptions {
   perspectiveName: string;
@@ -103,7 +104,7 @@ function renderTaskTree(task: any, taskMap: any, hideCompleted: boolean, prefix:
   const currentPrefix = prefix + (isLast ? '└─ ' : '├─ ');
 
   // 渲染当前任务
-  let taskLine = currentPrefix + formatTaskName(task);
+  let taskLine = currentPrefix + formatTaskName(task) + ` ${formatTaskLink(task.id)}`;
   lines.push(taskLine);
 
   // 添加任务详细信息（缩进显示）
@@ -219,6 +220,7 @@ function formatFlatTasks(perspectiveName: string, tasks: any[], limit: number, t
       taskText += `\n   备注: ${notePreview}${task.note.length > 100 ? '...' : ''}`;
     }
 
+    taskText += `\n   ${formatTaskLink(task.id)}`;
     return taskText;
   }).join('\n\n');
 
@@ -308,5 +310,6 @@ function formatTaskForGroup(task: any): string {
     }
   }
 
+  taskLine += ` ${formatTaskLink(task.id)}`;
   return taskLine;
 }
