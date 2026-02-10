@@ -1,5 +1,5 @@
 import { executeAppleScript } from '../../utils/scriptExecution.js';
-import { formatDateForAppleScript } from '../../utils/dateFormatter.js';
+import { generateAppleScriptDateVar } from '../../utils/dateFormatter.js';
 
 // Status options for tasks and projects
 type TaskStatus = 'incomplete' | 'completed' | 'dropped';
@@ -117,10 +117,11 @@ function generateAppleScript(params: EditItemParams): string {
           set end of changedProperties to "due date"
 `;
     } else {
-      const formattedDueDate = formatDateForAppleScript(params.newDueDate);
+      const dueDateScript = generateAppleScriptDateVar(params.newDueDate, 'theDueDate', '          ');
       script += `
           -- Update due date
-          set due date of foundItem to date "${formattedDueDate}"
+          ${dueDateScript}
+          set due date of foundItem to theDueDate
           set end of changedProperties to "due date"
 `;
     }
@@ -134,10 +135,11 @@ function generateAppleScript(params: EditItemParams): string {
           set end of changedProperties to "defer date"
 `;
     } else {
-      const formattedDeferDate = formatDateForAppleScript(params.newDeferDate);
+      const deferDateScript = generateAppleScriptDateVar(params.newDeferDate, 'theDeferDate', '          ');
       script += `
           -- Update defer date
-          set defer date of foundItem to date "${formattedDeferDate}"
+          ${deferDateScript}
+          set defer date of foundItem to theDeferDate
           set end of changedProperties to "defer date"
 `;
     }
