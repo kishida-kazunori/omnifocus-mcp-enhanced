@@ -1,5 +1,5 @@
 import { executeAppleScript } from '../../utils/scriptExecution.js';
-import { formatDateForAppleScript } from '../../utils/dateFormatter.js';
+import { generateAppleScriptDateVar } from '../../utils/dateFormatter.js';
 
 // Interface for task creation parameters
 export interface AddOmniFocusTaskParams {
@@ -22,9 +22,9 @@ function generateAppleScript(params: AddOmniFocusTaskParams): string {
   // Sanitize and prepare parameters for AppleScript
   const name = params.name.replace(/['"\\]/g, '\\$&'); // Escape quotes and backslashes
   const note = params.note?.replace(/['"\\]/g, '\\$&') || '';
-  // Convert ISO dates to AppleScript format
-  const dueDate = params.dueDate ? formatDateForAppleScript(params.dueDate) : '';
-  const deferDate = params.deferDate ? formatDateForAppleScript(params.deferDate) : '';
+  // Generate locale-independent AppleScript date snippets
+  const dueDateScript = params.dueDate ? generateAppleScriptDateVar(params.dueDate, 'theDueDate', '        ') : '';
+  const deferDateScript = params.deferDate ? generateAppleScriptDateVar(params.deferDate, 'theDeferDate', '        ') : '';
   const flagged = params.flagged === true;
   const estimatedMinutes = params.estimatedMinutes?.toString() || '';
   const tags = params.tags || [];
@@ -69,8 +69,8 @@ function generateAppleScript(params: AddOmniFocusTaskParams): string {
         
         -- Set task properties
         ${note ? `set note of newTask to "${note}"` : ''}
-        ${dueDate ? `set due date of newTask to date "${dueDate}"` : ''}
-        ${deferDate ? `set defer date of newTask to date "${deferDate}"` : ''}
+        ${dueDateScript ? `${dueDateScript}\n        set due date of newTask to theDueDate` : ''}
+        ${deferDateScript ? `${deferDateScript}\n        set defer date of newTask to theDeferDate` : ''}
         ${flagged ? `set flagged of newTask to true` : ''}
         ${estimatedMinutes ? `set estimated minutes of newTask to ${estimatedMinutes}` : ''}
         
